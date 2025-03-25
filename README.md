@@ -1,0 +1,1 @@
+# freshKind-core-application
