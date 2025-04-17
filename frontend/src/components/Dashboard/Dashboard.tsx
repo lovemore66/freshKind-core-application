@@ -1,6 +1,7 @@
 
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
+import ProductPage from "./productPage";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -14,6 +15,7 @@ const Dashboard = () => {
   return (
     <div>
       <h2>Welcome, {user?.email}</h2>
+      <ProductPage />
       <button onClick={handleLogout}>Logout</button>
     </div>
   );
