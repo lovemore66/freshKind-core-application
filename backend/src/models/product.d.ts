@@ -9,5 +9,6 @@ export interface Product {
   price: number;
   category?: string;
   imageUrl?: string;
+  userId: string | undefined;
   reviews: Review[];
 }

@@ -15,9 +15,11 @@ const productSchema = new Schema<ProductDocument>(
     price: { type: Number, required: true },
     category: String,
     imageUrl: String,
+    userId: { type: String, required: true },
     reviews: [reviewSchema],
   },
   { timestamps: true }
 );
+
 
 export default mongoose.model<ProductDocument>('Product', productSchema);

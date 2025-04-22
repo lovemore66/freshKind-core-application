@@ -43,6 +43,10 @@ const generateDummyProducts = async () => {
       price: parseFloat((Math.random() * 100 + 10).toFixed(2)), // $10 - $110
       category: `Category ${((i % 5) + 1)}`,
       imageUrl: `https://picsum.photos/200/300?random=${i}`,
+      
+userId
+: 
+"nDR6ESSFT6PLEfGFR6maZFrG7mR2",
       reviews,
     });
   }

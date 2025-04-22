@@ -1,19 +1,33 @@
-import { Input, Button, Box, Heading } from "@chakra-ui/react";
+import {
+  Input,
+  Button,
+  Box,
+  Heading,
+} from "@chakra-ui/react";
+import { Switch } from '@chakra-ui/react'
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+  FormErrorIcon,
+} from "@chakra-ui/form-control";
 import { doc, getDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../auth/AuthContext";
 import { db } from "../../configs/firebase";
 import { uploadLogo, updateUserSettings } from "../../utils/firebaseHelpers";
-import { Select } from "@chakra-ui/select"
-import { Image } from "@chakra-ui/image"
-
+import { Select } from "@chakra-ui/select";
+import { Image } from "@chakra-ui/image";
+import { useCustomTheme } from "../../contexts/CustomThemeContext";
 
 export const SettingsPage = () => {
   const { user } = useAuth();
+  const { theme, themeName, toggleTheme } = useCustomTheme();
+
   const [form, setForm] = useState({
     name: "",
     role: "guest",
-    theme: "light",
     fontColor: "#000000",
     businessName: "",
     businessAddress: "",
@@ -34,7 +48,6 @@ export const SettingsPage = () => {
               ...prev,
               name: data.name || "",
               role: data.role || "guest",
-              theme: data.theme || "light",
               fontColor: data.fontColor || "#000000",
               businessName: data.businessName || "",
               businessAddress: data.businessAddress || "",
@@ -73,7 +86,6 @@ export const SettingsPage = () => {
         await updateUserSettings(user.uid, {
           name: form.name,
           role: form.role,
-          theme: form.theme,
           fontColor: form.fontColor,
           businessName: form.businessName,
           businessAddress: form.businessAddress,
@@ -89,12 +101,28 @@ export const SettingsPage = () => {
   };
 
   return (
-    <Box>
-      <Heading>Settings</Heading>
+    <Box p={6} bg={theme.background} color={theme.text}>
+      <Heading color={theme.primary} mb={4}>Settings</Heading>
+      <Box mb={'20px'}>
+        {/* <Switch.Root invalid
+          checked={themeName === "dark"}
+          onCheckedChange={toggleTheme}
+        >
+          <Switch.HiddenInput />
+          <Switch.Label>Activate {themeName === "light" ? 'Dark' : 'Light'} Theme</Switch.Label>
+          <Switch.Control />
+        </Switch.Root> */}
+  <FormLabel htmlFor='email-alerts' mb='0'>
+  Activate {themeName === "light" ? 'Dark' : 'Light'} Theme
+  </FormLabel>
+  <Switch  isChecked={themeName === "dark"}
+          onChange={toggleTheme} colorScheme='teal' size='lg' />
+      </Box>
 
-      <Input name="name" value={form.name} onChange={handleChange} placeholder="Name" />
 
-      <Select name="role" value={form.role} onChange={handleChange}>
+      <Input name="name" value={form.name} onChange={handleChange} placeholder="Name" mb={2} />
+
+      <Select name="role" value={form.role} onChange={handleChange} mb={2}>
         <option value="guest">Guest</option>
         <option value="basic">Basic</option>
         <option value="admin">Admin</option>
@@ -102,20 +130,16 @@ export const SettingsPage = () => {
         <option value="enterprise">Enterprise</option>
       </Select>
 
-      <Select name="theme" value={form.theme} onChange={handleChange}>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </Select>
+      <Input color={theme.text} type="color" name="fontColor" value={form.fontColor} onChange={handleChange} mb={2} />
+      <Input color={theme.text} name="businessName" value={form.businessName} onChange={handleChange} placeholder="Business Name" mb={2} />
+      <Input color={theme.text} name="businessAddress" value={form.businessAddress} onChange={handleChange} placeholder="Business Address" mb={2} />
+      <Input color={theme.text} type="file" onChange={handleLogoChange} mb={2} />
 
-      <Input type="color" name="fontColor" value={form.fontColor} onChange={handleChange} />
-      <Input name="businessName" value={form.businessName} onChange={handleChange} placeholder="Business Name" />
-      <Input name="businessAddress" value={form.businessAddress} onChange={handleChange} placeholder="Business Address" />
-      <Input type="file" onChange={handleLogoChange} />
       {form.logoURL && (
-        <img src={form.logoURL} alt="Logo Preview" />
+        <Image src={form.logoURL} alt="Logo Preview" boxSize="100px" mb={4} />
       )}
 
-      <Button mt={4} onClick={handleSubmit}>Update Settings</Button>
+      <Button onClick={handleSubmit}>Update Settings</Button>
     </Box>
   );
 };

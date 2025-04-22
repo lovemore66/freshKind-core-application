@@ -1,5 +1,4 @@
-// pages/ProfilePage.tsx
-import { Box, Heading, Text, Avatar, Spinner } from '@chakra-ui/react';
+import { Box, Heading, Text,  Spinner } from '@chakra-ui/react';
 import { useAuth } from '../../auth/AuthContext'
 import { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';

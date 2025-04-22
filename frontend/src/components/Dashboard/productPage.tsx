@@ -12,10 +12,18 @@ import {
   addToCart,
   clearCart,
   increaseQuantity,
-  removeFromCart,
 } from "../../store/cartSlice/cartSlice";
 import Cart from "../Cart/Cart";
-import { Box } from "@chakra-ui/react";
+import {
+  Box,
+  Image,
+  Text,
+  Button,
+  Grid,
+  Input,
+  Flex,
+} from "@chakra-ui/react";
+import { useAuth } from "../../auth/AuthContext";
 
 const ProductPage = () => {
   const { data: products = [], isLoading } = useGetProductsQuery();
@@ -25,12 +33,11 @@ const ProductPage = () => {
   const [addReview] = useAddReviewMutation();
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  useEffect(() => {
-    console.log("Products:", products); // ✅ Will now show an array
-  }, [products]);
-
+  const { user } = useAuth();
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state) => state.cart);
+
+  const [search, setSearch] = useState(""); // 🔍 Search state
 
   const [newProduct, setNewProduct] = useState<Product>({
     title: "",
@@ -38,26 +45,15 @@ const ProductPage = () => {
     imageUrl: "",
     description: "",
     category: "",
+    userId: user?.uid,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
   };
 
-  const handleCreate = () => {
-    createProduct(newProduct);
-    setNewProduct({
-      title: "",
-      price: 0,
-      imageUrl: "",
-      description: "",
-      category: "",
-    });
-  };
 
   const handleDelete = (id: string) => deleteProduct(id);
-
-  if (isLoading) return <p>Loading...</p>;
 
   const handleAddToCart = (product: Product) => {
     const existing = cart.items.find((item) => item._id === product._id);
@@ -68,69 +64,94 @@ const ProductPage = () => {
     }
   };
 
+  // 🔍 Filter products based on search term
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  if (isLoading) return <p>Loading...</p>;
+
   return (
     <div>
-      <h2>🛍 Products</h2>
 
-      <input
-        name="title"
-        placeholder="Title"
-        value={newProduct.title}
-        onChange={handleChange}
+      {/* 🔍 Search Input */}
+   <Box padding={'10px'}>
+   <Input
+        placeholder="Search by title..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        mb={4}
+        width="100%"
       />
-      <input
-        name="price"
-        type="number"
-        placeholder="Price"
-        value={newProduct.price}
-        onChange={handleChange}
-      />
-      <input
-        name="imageUrl"
-        placeholder="Image URL"
-        value={newProduct.imageUrl}
-        onChange={handleChange}
-      />
-      <button onClick={handleCreate}>Create Product</button>
+   </Box>
 
-      {/* Render List of products */}
-      <ul>
-        {products?.map((product: any) => (
-          <Box borderRadius="sm" mt="20px" boxShadow="sm" key={product._id}>
-            <img src={product.imageUrl} width={50} />
-            <b>{product.title}</b> - ${product.price}
-            <button onClick={() => handleDelete(product._id!)}>
-              ❌ Delete
-            </button>
-            <button onClick={() => setEditingProduct(product)}>✏️ Edit</button>
-            <button onClick={() => handleAddToCart(product)}>
-              🛒 Add to Cart
-            </button>
+      {/* Render filtered products */}
+      <Grid
+        templateColumns={{
+          base: "repeat(1, 1fr)",
+          sm: "repeat(2, 1fr)",
+          md: "repeat(3, 1fr)",
+          lg: "repeat(4, 1fr)",
+        }}
+        gap={6}
+      >
+        {filteredProducts.map((product) => (
+          <Box
+            key={product._id}
+            borderRadius="md"
+            boxShadow="md"
+            bg="gray.100"
+            overflow="hidden"
+            p={4}
+          >
+            <Image
+              src={product.imageUrl}
+              alt={product.title}
+              w="100%"
+              h="200px"
+              objectFit="cover"
+              borderRadius="md"
+              mb={3}
+            />
+            <Text fontSize="lg" fontWeight="bold" mb={1}>
+              {product.title}
+            </Text>
+            <Text color="gray.600" fontSize="sm" mb={2}>
+              {product.category}
+            </Text>
+            <Text fontWeight="bold" color="teal.500" mb={3}>
+              ${product.price}
+            </Text>
+            <Flex gap={2}>
+              <Button size="sm" colorScheme="blue" onClick={() => handleAddToCart(product)}>
+                🛒 Add to Cart
+              </Button>
+              <Button size="sm" colorScheme="red" onClick={() => handleDelete(product._id!)}>
+                ❌ Delete
+              </Button>
+              <Button size="sm" onClick={() => setEditingProduct(product)}>✏️</Button>
+            </Flex>
           </Box>
         ))}
-      </ul>
+      </Grid>
 
+      <Cart />
+      <Button mt={4} onClick={() => dispatch(clearCart())}>🧹 Clear Cart</Button>
 
-      {/* Cart */}
-     <Cart />
-
-      <button onClick={() => dispatch(clearCart())}>🧹 Clear Cart</button>
-
-
-
-      {/* update */}
+      {/* Update section */}
       {editingProduct && (
-        <div>
+        <Box mt={6}>
           <h3>✏️ Edit Product</h3>
-          <input
+          <Input
             name="title"
             placeholder="Title"
             value={editingProduct.title}
             onChange={(e) =>
               setEditingProduct({ ...editingProduct, title: e.target.value })
             }
+            mb={2}
           />
-          <input
+          <Input
             name="price"
             type="number"
             placeholder="Price"
@@ -141,8 +162,9 @@ const ProductPage = () => {
                 price: parseFloat(e.target.value),
               })
             }
+            mb={2}
           />
-          <button
+          <Button
             onClick={() => {
               if (editingProduct && editingProduct._id) {
                 updateProduct({
@@ -160,8 +182,8 @@ const ProductPage = () => {
             }}
           >
             Save Changes
-          </button>
-        </div>
+          </Button>
+        </Box>
       )}
     </div>
   );

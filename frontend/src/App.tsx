@@ -9,11 +9,18 @@ import OrdersPage from "./components/Orders/OrdersPage";
 import ProfilePage from "./components/Profile/ProfilePage";
 import SettingsPage from "./components/settings/SettingsPage";
 import NavBar from "./components/NavBar/NavBar";
+import { CustomThemeProvider } from "./contexts/CustomThemeContext";
+import MyProductsPage from "./components/Products/MyProductsPage";
+import { useState } from "react";
+
 
 function App() {
+
+  const [search, setSearch] = useState<string>("");
   return (
     <AuthProvider>
-            <NavBar />
+      <CustomThemeProvider>
+        <NavBar setSearch={setSearch} />
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
@@ -21,9 +28,11 @@ function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
           <Route path="/orders" element={<OrdersPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/my-products" element={<ProtectedRoute><MyProductsPage /></ProtectedRoute>} />
         </Routes>
+      </CustomThemeProvider>
     </AuthProvider>
   );
 }

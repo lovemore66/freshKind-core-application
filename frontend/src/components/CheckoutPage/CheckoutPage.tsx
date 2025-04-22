@@ -4,7 +4,6 @@ import {
     Input,
     VStack,
     Heading,
-    Text,
     Flex,
   } from "@chakra-ui/react"
   import {
@@ -36,7 +35,6 @@ import { useCreateOrderMutation } from "../../orderApi/orderApi";
 const CheckoutPage = () => {
     const cart = useAppSelector((state) => state.cart);
     const dispatch = useAppDispatch();
-    const toast = useToast();
     const navigate = useNavigate();
 
     const [createOrder] = useCreateOrderMutation()
@@ -55,6 +53,8 @@ const CheckoutPage = () => {
       const { name, value } = e.target;
       setFormData((prev) => ({ ...prev, [name]: value }));
     };
+
+     const toast = useToast()
   
     const handleOrderSubmit = async () => {
         try {
@@ -72,22 +72,21 @@ const CheckoutPage = () => {
             },
           };
     
-          await createOrder(order).unwrap(); // <-- call the mutation
+          await createOrder(order).unwrap(); 
           dispatch(clearCart()); // optional: clear cart after order
-          toast({
-            title: "Order placed successfully!",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
-          navigate("/"); // redirect if needed
+                toast({
+                  title: "Order Placed",
+                  description: "Order placed successfully!",
+                  status: "success",
+                  duration: 4000,
+                });
+          navigate("/orders"); // redirect if needed
         } catch (error) {
           toast({
             title: "Failed to place order.",
             description: "Something went wrong. Try again.",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
+            status: "success",
+            duration: 4000,
           });
         }
       };

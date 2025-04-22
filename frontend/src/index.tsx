@@ -5,34 +5,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store/store';
 import { Provider } from 'react-redux';
+import { ColorModeProvider } from "@chakra-ui/color-mode"
 
 
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react"
-import { system } from './components/Theme/Theme';
+import { ChakraProvider,} from "@chakra-ui/react"
 import { BrowserRouter } from 'react-router-dom';
-
-
-const theme = {
-  fonts: {
-      heading: '"Avenir Next", sans-serif',
-      body: '"Open Sans", sans-serif',
-  },
-  colors: {
-      brand: {
-          bg: '#9747FF',
-          text: '#fff',
-          card: '#0A99FF',
-      },
-  },
-  sizes: {
-      xl: {
-          h: '56px',
-          fontSize: 'lg',
-          px: '32px',
-          bg: '#9747FF'
-      },
-  }
-}
+import { CustomThemeProvider } from './contexts/CustomThemeContext';
 
 //export default extendTheme(theme);
 
@@ -41,7 +19,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <ChakraProvider value={system}>
+    <ChakraProvider>
       <Provider store={store}>
       <BrowserRouter>
     <App />
