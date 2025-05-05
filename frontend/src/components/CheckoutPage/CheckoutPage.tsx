@@ -31,6 +31,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../store/hooks/hooks";
 import { useCreateOrderMutation } from "../../orderApi/orderApi";
+
+import AddressAutocomplete from "../../deliveryModule/components/AddressAutocomplete/AddressAutocomplete"
   
 const CheckoutPage = () => {
     const cart = useAppSelector((state) => state.cart);
@@ -55,6 +57,8 @@ const CheckoutPage = () => {
     };
 
      const toast = useToast()
+     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY!;
+
   
     const handleOrderSubmit = async () => {
         try {
@@ -91,7 +95,22 @@ const CheckoutPage = () => {
         }
       };
     
-  
+      const handlePlaceSelect = (place: google.maps.places.PlaceResult) => {
+        const components = place.address_components || [];
+      
+        const getComponent = (type: string) =>
+          components.find((c) => c.types.includes(type))?.long_name || "";
+      
+        setFormData((prev) => ({
+          ...prev,
+          address: place.formatted_address || "",
+          city: getComponent("locality"),
+          postalCode: getComponent("postal_code"),
+        }));
+        console.log('components', components)
+      };
+
+      
     return (
       <Box maxW="4xl" mx="auto" mt={10} p={5} boxShadow="md" borderRadius="md">
         <Heading size="lg" mb={6}>Checkout</Heading>
@@ -124,6 +143,16 @@ const CheckoutPage = () => {
         </TableContainer>
   
         <VStack align="stretch">
+        <FormControl>
+  <FormLabel>Search Address</FormLabel>
+  <AddressAutocomplete />
+</FormControl>
+
+<FormControl>
+  <FormLabel>Selected Address</FormLabel>
+  <Input name="address" value={formData.address} readOnly />
+</FormControl>
+
           <FormControl>
             <FormLabel>Address</FormLabel>
             <Input name="address" value={formData.address} onChange={handleInputChange} />

@@ -20,6 +20,7 @@ import { uploadLogo, updateUserSettings } from "../../utils/firebaseHelpers";
 import { Select } from "@chakra-ui/select";
 import { Image } from "@chakra-ui/image";
 import { useCustomTheme } from "../../contexts/CustomThemeContext";
+import MapWithDirections from "../../deliveryModule/components/Directions/MapWithDirections";
 
 export const SettingsPage = () => {
   const { user } = useAuth();
@@ -103,15 +104,8 @@ export const SettingsPage = () => {
   return (
     <Box p={6} bg={theme.background} color={theme.text}>
       <Heading color={theme.primary} mb={4}>Settings</Heading>
+      <MapWithDirections />
       <Box mb={'20px'}>
-        {/* <Switch.Root invalid
-          checked={themeName === "dark"}
-          onCheckedChange={toggleTheme}
-        >
-          <Switch.HiddenInput />
-          <Switch.Label>Activate {themeName === "light" ? 'Dark' : 'Light'} Theme</Switch.Label>
-          <Switch.Control />
-        </Switch.Root> */}
   <FormLabel htmlFor='email-alerts' mb='0'>
   Activate {themeName === "light" ? 'Dark' : 'Light'} Theme
   </FormLabel>

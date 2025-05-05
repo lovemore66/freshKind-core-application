@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import ProductPage from "./productPage";
-import { useToast } from "@chakra-ui/react";
+import { Box, GridItem, SimpleGrid, useToast } from "@chakra-ui/react";
 
 
 
@@ -26,6 +26,14 @@ const Dashboard = () => {
   return (
     <div>
       <h2>Welcome, {user?.displayName}</h2>
+      <SimpleGrid columns={{ base: 2, md: 4 }} gap={{ base: "24px", md: "40px" }}>
+    <GridItem colSpan={{ base: 1, md: 3 }}>
+      <Box height="20">Column 1</Box>
+    </GridItem>
+    <GridItem background={'grey'}  colSpan={{ base: 1, md: 1 }}>
+      <Box height="20">Column 2</Box>
+    </GridItem>
+  </SimpleGrid>
       <ProductPage  />
       <button onClick={handleLogout}>Logout</button>
     </div>
