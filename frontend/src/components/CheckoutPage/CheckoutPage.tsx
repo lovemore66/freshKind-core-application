@@ -144,13 +144,6 @@ const CheckoutPage = () => {
   
         <VStack align="stretch">
         <FormControl>
-  <FormLabel>Search Address</FormLabel>
-  <AddressAutocomplete />
-</FormControl>
-
-<FormControl>
-  <FormLabel>Selected Address</FormLabel>
-  <Input name="address" value={formData.address} readOnly />
 </FormControl>
 
           <FormControl>

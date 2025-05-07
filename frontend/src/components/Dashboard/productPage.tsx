@@ -98,9 +98,8 @@ const ProductPage = () => {
         {filteredProducts.map((product) => (
           <Box
             key={product._id}
-            borderRadius="md"
+             borderRadius="sm"
             boxShadow="md"
-            bg="gray.100"
             overflow="hidden"
             p={4}
           >
@@ -110,7 +109,7 @@ const ProductPage = () => {
               w="100%"
               h="200px"
               objectFit="cover"
-              borderRadius="md"
+               borderRadius="sm"
               mb={3}
             />
             <Text fontSize="lg" fontWeight="bold" mb={1}>
@@ -123,13 +122,13 @@ const ProductPage = () => {
               ${product.price}
             </Text>
             <Flex gap={2}>
-              <Button size="sm" colorScheme="blue" onClick={() => handleAddToCart(product)}>
+              <Button size="sm"  borderRadius="sm" colorScheme="blue" onClick={() => handleAddToCart(product)}>
                 🛒 Add to Cart
               </Button>
-              <Button size="sm" colorScheme="red" onClick={() => handleDelete(product._id!)}>
+              <Button size="sm"  borderRadius="sm" colorScheme="red" onClick={() => handleDelete(product._id!)}>
                 ❌ Delete
               </Button>
-              <Button size="sm" onClick={() => setEditingProduct(product)}>✏️</Button>
+              <Button size="sm" bg={'transparent'} border={'1px solid green'} borderRadius="sm" onClick={() => setEditingProduct(product)}>✏️</Button>
             </Flex>
           </Box>
         ))}

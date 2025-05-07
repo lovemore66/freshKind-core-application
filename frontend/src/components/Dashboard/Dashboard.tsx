@@ -2,7 +2,8 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import ProductPage from "./productPage";
-import { Box, GridItem, SimpleGrid, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, GridItem, SimpleGrid, useToast } from "@chakra-ui/react";
+import SideBar from "./SideBar";
 
 
 
@@ -25,17 +26,21 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h2>Welcome, {user?.displayName}</h2>
-      <SimpleGrid columns={{ base: 2, md: 4 }} gap={{ base: "24px", md: "40px" }}>
-    <GridItem colSpan={{ base: 1, md: 3 }}>
-      <Box height="20">Column 1</Box>
-    </GridItem>
-    <GridItem background={'grey'}  colSpan={{ base: 1, md: 1 }}>
-      <Box height="20">Column 2</Box>
-    </GridItem>
-  </SimpleGrid>
-      <ProductPage  />
-      <button onClick={handleLogout}>Logout</button>
+      {/* <h2>Welcome, {user?.displayName}</h2> */}
+      <Flex height="100vh" overflow="hidden">
+      {/* Sidebar - fixed width */}
+      <Box width="240px" flexShrink={0}>
+        <SideBar />
+      </Box>
+
+      {/* Main Content - flexible */}
+      <Box flex="1" overflowY="auto" p={4}>
+        <ProductPage />
+        <Button mt={4} onClick={handleLogout} colorScheme="red">
+          Logout
+        </Button>
+      </Box>
+    </Flex>
     </div>
   );
 };
